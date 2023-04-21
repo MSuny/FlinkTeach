@@ -1,4 +1,4 @@
-package com.ccy;
+package com.ccy._01base;
 
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.ExecutionEnvironment;

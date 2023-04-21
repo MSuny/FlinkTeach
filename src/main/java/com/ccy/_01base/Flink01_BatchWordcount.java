@@ -1,4 +1,4 @@
-package com.ccy;
+package com.ccy._01base;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.ExecutionEnvironment;
