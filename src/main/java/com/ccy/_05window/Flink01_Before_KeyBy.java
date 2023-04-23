@@ -38,6 +38,7 @@ public class Flink01_Before_KeyBy {
                                         Iterable<Tuple2<String, Long>> elements,
                                         Collector<String> out) throws Exception {
                         List<Tuple2<String, Long>> tuple2s = MyUtil.toList(elements);
+                        System.out.println(context.window().getStart());
                         out.collect(tuple2s.toString());
                     }
                 })
