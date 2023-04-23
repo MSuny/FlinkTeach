@@ -18,7 +18,7 @@ public class Flink03_UnBoundedStreamingWordcount {
         // 1. 创建流式执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         // 2. 读取socket流数据
-        DataStreamSource<String> lineDSS = env.socketTextStream("192.168.31.208", 9999);
+        DataStreamSource<String> lineDSS = env.socketTextStream("localhost", 9999);
         // 3. 转换数据格式
         SingleOutputStreamOperator<Tuple2<String, Long>> data = lineDSS
                 .flatMap(new FlatMapFunction<String, String>() {

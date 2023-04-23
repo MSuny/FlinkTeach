@@ -20,7 +20,7 @@ public class Flink01_Before_KeyBy {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(conf);
         env.setParallelism(2);
 
-        env.socketTextStream("192.168.31.208", 9999)
+        env.socketTextStream("localhost", 9999)
                 .flatMap(new FlatMapFunction<String, Tuple2<String, Long>>() {
 
                     @Override

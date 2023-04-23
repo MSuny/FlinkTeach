@@ -3,28 +3,32 @@ package com.ccy._05window;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
+
+import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
+
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
-
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 
-public class Flink02_Window_Tumbling {
+/**
+ * @author Hefei
+ * @description
+ * @project_name FlinkTutorial
+ * @package_name com.atguigu.chapter06
+ */
+public class Flink03_Window_Sliding {
     public static void main(String[] args) {
         Configuration conf = new Configuration();
-        // TODO 设置本地webUI端口号
-        conf.setInteger("rest.port", 8050);
-//        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(conf);
+        conf.setInteger("rest.port", 10000);
         StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
-        env.setParallelism(1);
+        env.setParallelism(2);
 
         env.socketTextStream("localhost", 9999)
                 .flatMap(new FlatMapFunction<String, Tuple2<String, Long>>() {
@@ -38,9 +42,10 @@ public class Flink02_Window_Tumbling {
                 })
                 .keyBy(t -> t.f0)
                 // window一般用在keyby之后
-                // 创建一个5秒的滚动窗口 只计算窗口内的数据  窗口结束的时候才开始计算 可以在of内加入offset（多数用来时区处理）
-                .window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
+                // 创建一个5秒的窗口 4秒的滑动步长  只计算窗口内的数据  窗口结束的时候才开始计算
+                .window(SlidingProcessingTimeWindows.of(Time.seconds(5), Time.seconds(4)))
                 .process(new ProcessWindowFunction<Tuple2<String, Long>, String, String, TimeWindow>() {
+
                     @Override
                     public void process(String key,
                                         Context ctx,
@@ -51,11 +56,14 @@ public class Flink02_Window_Tumbling {
                         ArrayList<String> words = new ArrayList<>();
                         for (Tuple2<String, Long> word : elements) {
                             words.add(word.f0);
+
                         }
                         out.collect("数据为" +
                                 words +
-                                "时间窗口为：[" + simpleDateFormat.format(new Date(ctx.window().getStart())) +
-                                "," + simpleDateFormat.format(new Date(ctx.window().getEnd())) +
+                                "时间窗口为：[" +
+                                simpleDateFormat.format(new Date(ctx.window().getStart())) +
+                                "," +
+                                simpleDateFormat.format(new Date(ctx.window().getEnd())) +
                                 ")");
                     }
                 })
