@@ -6,7 +6,7 @@ import org.apache.flink.api.common.eventtime.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 
-public class Flink09_CustomPeriodicWatermark {
+public class Flink09_Custom_Periodic_Punctuated_Watermark {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -54,6 +54,21 @@ public class Flink09_CustomPeriodicWatermark {
         public void onPeriodicEmit(WatermarkOutput output) {
             // 发射水位线，默认200ms调用一次
             output.emitWatermark(new Watermark(maxTs - delayTime - 1L));
+        }
+    }
+
+    public class PunctuatedGenerator implements WatermarkGenerator<WaterSensor> {
+        @Override
+        public void onEvent(WaterSensor r, long eventTimestamp, WatermarkOutput output) {
+            // 只有在遇到特定的传感器id时，才发出水位线
+            if ("sensor100".equals(r.getId())) {
+                output.emitWatermark(new Watermark(r.getTs() - 1));
+            }
+        }
+
+        @Override
+        public void onPeriodicEmit(WatermarkOutput output) {
+            // 不需要做任何事情，因为我们在onEvent方法中发射了水位线
         }
     }
 }
