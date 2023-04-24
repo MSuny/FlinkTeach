@@ -31,7 +31,7 @@ import java.util.List;
  * sensor1,13000,10
  * sensor1,22000,10
  */
-public class Flink08_Watermark {
+public class Flink08_Watermark_WithIdleness {
     public static void main(String[] args) {
         Configuration conf = new Configuration();
 //        conf.setInteger("rest.port", 10000);
@@ -55,7 +55,7 @@ public class Flink08_Watermark {
                                     public long extractTimestamp(WaterSensor waterSensor, long recordTimestamp) {
                                         return waterSensor.getTs();
                                     }
-                                })
+                                }).withIdleness(Duration.ofSeconds(10))
                 )
                 .keyBy(WaterSensor::getId)
                 .window(TumblingEventTimeWindows.of(Time.seconds(5)))
