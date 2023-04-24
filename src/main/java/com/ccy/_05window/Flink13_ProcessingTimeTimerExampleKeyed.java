@@ -7,7 +7,7 @@ import org.apache.flink.util.Collector;
 
 import java.sql.Timestamp;
 
-public class Flink12_ProcessingTimeTimerExampleKeyed {
+public class Flink13_ProcessingTimeTimerExampleKeyed {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
