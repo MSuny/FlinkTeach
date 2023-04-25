@@ -16,7 +16,7 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- * 在hadoop102的9999端口输入如下数据：
+ * 在localhost的9999端口输入如下数据：
  * sensor1,1000,10
  * sensor1,2000,10
  * sensor1,3000,10
