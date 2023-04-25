@@ -14,7 +14,7 @@ public class ClickSource implements SourceFunction<Event> {
         Random random = new Random();
         while (running) {
             ctx.collect(new Event(
-                    "name",
+                    "name"+random.nextInt(5),
                     "click" + random.nextInt(50),
                     Calendar.getInstance().getTimeInMillis()
             ));
