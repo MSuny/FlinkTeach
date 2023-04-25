@@ -25,7 +25,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Flunk15_KeyedProcessTopN {
+public class Flink15_KeyedProcessTopN {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
